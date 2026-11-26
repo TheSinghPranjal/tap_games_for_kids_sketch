@@ -9,7 +9,10 @@ import 'package:tap_games_for_kids_sketch/core/rewards/reward_store.dart';
 import 'package:tap_games_for_kids_sketch/games/catalog.dart';
 import 'package:tap_games_for_kids_sketch/main.dart';
 import 'package:tap_games_for_kids_sketch/screens/intro_screen.dart';
+import 'package:tap_games_for_kids_sketch/screens/home_screen.dart';
+import 'package:tap_games_for_kids_sketch/screens/hub_screen.dart';
 import 'package:tap_games_for_kids_sketch/screens/play_screen.dart';
+import 'package:tap_games_for_kids_sketch/ui/sketch_widgets.dart';
 
 void main() {
   late RewardService rewards;
@@ -29,7 +32,18 @@ void main() {
       TinyThinkApp(rewards: rewards, settings: settings, audio: AudioManager(settings), registry: registry),
     );
     await tester.pump();
+    // Splash -> home -> games hub.
+    await tester.pump(const Duration(seconds: 3));
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(find.byType(HomeScreen), findsOneWidget);
+    await tester.tap(find.text('Play\nGames'));
+    for (var i = 0; i < 10; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(find.byType(HubScreen), findsOneWidget);
   }
+
+  Finder dots(int remaining) => find.byWidgetPredicate((w) => w is FreePlayDots && w.remaining == remaining);
 
   // The intro demo animates forever, so settle with fixed pumps.
   Future<void> settle(WidgetTester tester) async {
@@ -44,11 +58,11 @@ void main() {
     expect(find.byType(IntroScreen), findsOneWidget);
   }
 
-  testWidgets('hub lists all 17 games with real free-play counts', (tester) async {
+  testWidgets('hub lists all 32 games with real free-play counts', (tester) async {
     await pumpApp(tester);
     expect(find.text('Tap & Drag Games'), findsOneWidget);
-    expect(registry.all, hasLength(17));
-    expect(find.text('0/3 free plays used'), findsWidgets);
+    expect(registry.all, hasLength(32));
+    expect(dots(3), findsWidgets);
   });
 
   testWidgets('a free round plays to the results and counts once', (tester) async {
@@ -72,7 +86,7 @@ void main() {
 
     await tester.tap(find.text('Games'));
     await settle(tester);
-    expect(find.text('1/3 free plays used'), findsOneWidget);
+    expect(dots(2), findsOneWidget);
   });
 
   testWidgets('fourth round asks before spending a gem', (tester) async {
@@ -115,5 +129,31 @@ void main() {
     await settle(tester);
     expect(find.text('Tap & Drag Games'), findsOneWidget);
     expect(rewards.getGemBalance(), 0);
+  });
+
+  testWidgets('hub cards fit on phones and iPads in both orientations', (tester) async {
+    await pumpApp(tester);
+    const sizes = [
+      Size(375, 667),
+      Size(430, 932),
+      Size(744, 1133),
+      Size(820, 1180),
+      Size(1024, 1366),
+      Size(1366, 1024),
+    ];
+    for (final size in sizes) {
+      tester.view.physicalSize = size * 2;
+      tester.view.devicePixelRatio = 2;
+      await settle(tester);
+      expect(tester.takeException(), isNull, reason: 'overflow at $size');
+      // Scroll through the whole grid so every card gets laid out.
+      for (var i = 0; i < 8; i++) {
+        await tester.drag(find.byType(CustomScrollView), const Offset(0, -600));
+        await tester.pump(const Duration(milliseconds: 100));
+        expect(tester.takeException(), isNull, reason: 'overflow at $size');
+      }
+      await tester.drag(find.byType(CustomScrollView), const Offset(0, 20000));
+      await settle(tester);
+    }
   });
 }

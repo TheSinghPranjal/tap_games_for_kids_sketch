@@ -209,7 +209,7 @@ class FlowerBasketScene extends GameScene {
   }
 
   @override
-  String get progressText => '$collected flowers';
+  String get progressText => tr.progFlowers(collected);
 
   @override
   void paintProgressIcon(Canvas c, Size s) => sprite(
@@ -223,9 +223,9 @@ class FlowerBasketScene extends GameScene {
 
 final flowerBasketGame = GameDefinition(
   gameId: 'blooming_flower_basket',
-  name: 'Blooming Flower Basket',
-  objective: 'Pick flowers when they bloom!',
-  instructions: 'Wait for a bud to open, then tap the flower.',
+  name: (l) => l.gameFlowerBasketName,
+  objective: (l) => l.gameFlowerBasketGoal,
+  instructions: (l) => l.gameFlowerBasketHowTo,
   interactionType: Interaction.tap,
   accent: Ink.pink,
   assetManifest: const ['bud', 'flower', 'stem', 'basket'],

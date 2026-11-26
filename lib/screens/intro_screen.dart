@@ -9,6 +9,7 @@ import '../core/engine/game_definition.dart';
 import '../core/rewards/reward_service.dart';
 import '../core/sketch/ink.dart';
 import '../core/sketch/pen.dart';
+import '../l10n/l10n.dart';
 import '../ui/sketch_widgets.dart';
 import 'play_screen.dart';
 
@@ -52,26 +53,31 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
         result = await rewards.startGame(def.gameId, requestId: _requestId, confirmSpend: true);
         if (!mounted) return;
       }
+      final l = context.l10n;
       switch (result.status) {
         case StartStatus.started:
           await Navigator.of(context).pushReplacement(
             PageRouteBuilder(
+              transitionDuration: const Duration(milliseconds: 350),
               pageBuilder: (_, _, _) => PlayScreen(def: def, round: result.round!),
-              transitionsBuilder: (_, a, _, child) => FadeTransition(opacity: a, child: child),
+              transitionsBuilder: (_, a, _, child) => FadeTransition(
+                opacity: CurvedAnimation(parent: a, curve: Curves.easeOut),
+                child: child,
+              ),
             ),
           );
           return;
         case StartStatus.noGems:
           await _message(
-            'No gems right now',
-            'You used your 3 free plays of this game today. Earn gems in other games, or come back tomorrow!',
+            l.noGemsTitle,
+            l.noGemsBody(RewardRules.freePlaysPerDay),
             mood: Mood.sleepy,
             backToGames: true,
           );
         case StartStatus.disabled:
-          await _message('This game is resting', 'Try another game for now!', mood: Mood.sleepy, backToGames: true);
+          await _message(l.restingTitle, l.restingBody, mood: Mood.sleepy, backToGames: true);
         case StartStatus.failed:
-          await _message('Oops!', 'Something went wrong. No gems were used. Please try again.', mood: Mood.wow);
+          await _message(l.oops, l.startFailedBody, mood: Mood.wow);
         case StartStatus.needsConfirmation:
           break;
       }
@@ -84,23 +90,20 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
     return showSketchDialog<bool>(
       context,
       builder: (ctx) {
+        final l = ctx.l10n;
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const GemIcon(size: 56),
             const SizedBox(height: 10),
-            const Text('Play again?', style: Txt.title, textAlign: TextAlign.center),
+            Text(l.playAgainTitle, style: Txt.title, textAlign: TextAlign.center),
             const SizedBox(height: 8),
-            Text(
-              'Free plays are used up for today.\nThis round uses 1 gem.',
-              style: Txt.body,
-              textAlign: TextAlign.center,
-            ),
+            Text(l.playAgainBody, style: Txt.body, textAlign: TextAlign.center),
             const SizedBox(height: 6),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('You have ', style: Txt.note),
+                Text(l.youHave, style: Txt.note.soft(ctx)),
                 const GemIcon(size: 20),
                 Text(' $balance', style: Txt.heading),
               ],
@@ -110,21 +113,20 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
               children: [
                 Expanded(
                   child: SketchButton(
-                    fill: Ink.white,
                     onTap: () => Navigator.of(ctx).pop(false),
-                    child: const Text('Not now', style: Txt.body),
+                    child: Text(l.notNow, style: Txt.body),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: SketchButton(
-                    fill: Ink.blushPink,
+                    fill: ctx.palette.surfaceAccent,
                     onTap: () => Navigator.of(ctx).pop(true),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Text('Use 1 ', style: Txt.heading),
-                        GemIcon(size: 22),
+                      children: [
+                        Text(l.useOneGem, style: Txt.heading),
+                        const GemIcon(size: 22),
                       ],
                     ),
                   ),
@@ -159,14 +161,14 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
             Text(text, style: Txt.body, textAlign: TextAlign.center),
             const SizedBox(height: 18),
             SketchButton(
-              fill: Ink.blushPink,
+              fill: ctx.palette.surfaceAccent,
               onTap: () => Navigator.of(ctx).pop(),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   DoodleIcon(backToGames ? Doodle.home : Doodle.check),
                   const SizedBox(width: 8),
-                  Text(backToGames ? 'Back to games' : 'OK', style: Txt.heading),
+                  Text(backToGames ? ctx.l10n.backToGames : ctx.l10n.ok, style: Txt.heading),
                 ],
               ),
             ),
@@ -181,6 +183,8 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     final scope = AppScope.of(context);
     final def = scope.registry.byId(widget.gameId)!;
+    final l = context.l10n;
+    final p = context.palette;
     return NotebookPage(
       child: SafeArea(
         child: ListenableBuilder(
@@ -201,7 +205,7 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
                         Row(
                           children: [
                             SketchButton(
-                              semanticLabel: 'Back to games',
+                              semanticLabel: l.backToGames,
                               padding: const EdgeInsets.all(10),
                               onTap: () => Navigator.of(context).maybePop(),
                               child: const DoodleIcon(Doodle.back),
@@ -211,23 +215,29 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
                           ],
                         ),
                         const SizedBox(height: 14),
-                        ScribbleTitle(def.name),
+                        ScribbleTitle(def.name(l)),
                         const SizedBox(height: 10),
-                        Text(def.instructions, style: Txt.note.copyWith(fontSize: 18), textAlign: TextAlign.center),
+                        Text(
+                          def.instructions(l),
+                          style: Txt.note.copyWith(fontSize: 18).soft(context),
+                          textAlign: TextAlign.center,
+                        ),
                         const SizedBox(height: 16),
                         SketchBox(
-                          fill: Ink.white,
+                          fill: p.surface,
                           seed: 9,
                           padding: const EdgeInsets.all(8),
                           child: SizedBox(
                             height: demoH,
                             width: double.infinity,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: AnimatedBuilder(
-                                animation: _demo,
-                                builder: (context, _) => CustomPaint(
-                                  painter: _DemoPainter(def, _demo.value, scope.settings.effectiveReducedMotion),
+                            child: SceneDimmer(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: AnimatedBuilder(
+                                  animation: _demo,
+                                  builder: (context, _) => CustomPaint(
+                                    painter: DemoPainter(def, _demo.value, scope.settings.effectiveReducedMotion),
+                                  ),
                                 ),
                               ),
                             ),
@@ -239,23 +249,27 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
                           crossAxisAlignment: WrapCrossAlignment.center,
                           spacing: 8,
                           children: [
-                            const Text('Free plays today', style: Txt.body),
+                            Text(l.freePlaysToday, style: Txt.body),
                             FreePlayDots(remaining: remaining, size: 18),
                           ],
                         ),
                         const SizedBox(height: 4),
-                        Text(switch (eligibility) {
-                          StartEligibility.free => '$remaining of ${RewardRules.freePlaysPerDay} left',
-                          StartEligibility.needsGem => 'Next round uses 1 gem',
-                          StartEligibility.noGems => 'Come back tomorrow for more free plays!',
-                          StartEligibility.disabled => 'This game is resting right now',
-                        }, style: Txt.small),
+                        Text(
+                          switch (eligibility) {
+                            StartEligibility.free => l.freePlaysRemaining(remaining, RewardRules.freePlaysPerDay),
+                            StartEligibility.needsGem => l.nextRoundUsesGem,
+                            StartEligibility.noGems => l.comeBackTomorrow,
+                            StartEligibility.disabled => l.gameRestingNow,
+                          },
+                          style: Txt.small.soft(context),
+                          textAlign: TextAlign.center,
+                        ),
                         const SizedBox(height: 18),
                         SizedBox(
                           width: 260,
                           child: SketchButton(
-                            semanticLabel: 'Start',
-                            fill: Ink.blushPink,
+                            semanticLabel: l.start,
+                            fill: p.surfaceAccent,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             onTap: _busy || eligibility == StartEligibility.disabled ? null : _start,
                             child: FittedBox(
@@ -266,7 +280,7 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
                                   const DoodleIcon(Doodle.play, size: 30),
                                   const SizedBox(width: 10),
                                   Text(
-                                    eligibility == StartEligibility.needsGem ? 'Start  1' : 'Start',
+                                    eligibility == StartEligibility.needsGem ? l.startWithGem : l.start,
                                     style: Txt.title.copyWith(fontSize: 30),
                                   ),
                                   if (eligibility == StartEligibility.needsGem) const GemIcon(size: 28),
@@ -289,9 +303,9 @@ class _IntroScreenState extends State<IntroScreen> with SingleTickerProviderStat
 }
 
 /// Animated demonstration: the game's thumbnail with a hand that taps (or
-/// drags across) it.
-class _DemoPainter extends CustomPainter {
-  _DemoPainter(this.def, this.t, this.reduced);
+/// drags across) it. Also used by the how-to-play guide.
+class DemoPainter extends CustomPainter {
+  DemoPainter(this.def, this.t, this.reduced);
   final GameDefinition def;
   final double t;
   final bool reduced;
@@ -329,5 +343,5 @@ class _DemoPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _DemoPainter o) => o.t != t;
+  bool shouldRepaint(covariant DemoPainter o) => o.t != t;
 }

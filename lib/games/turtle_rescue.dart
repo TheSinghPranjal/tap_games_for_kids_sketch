@@ -199,7 +199,7 @@ class TurtleScene extends GameScene {
   }
 
   @override
-  String get progressText => '$rescued safe turtles';
+  String get progressText => tr.progTurtles(rescued);
 
   @override
   void paintProgressIcon(Canvas c, Size s) =>
@@ -208,9 +208,9 @@ class TurtleScene extends GameScene {
 
 final turtleRescueGame = GameDefinition(
   gameId: 'tiny_turtle_rescue',
-  name: 'Tiny Turtle Rescue',
-  objective: 'Help baby turtles reach the reef!',
-  instructions: 'Tap a baby turtle and it will swim home to the coral reef.',
+  name: (l) => l.gameTurtleRescueName,
+  objective: (l) => l.gameTurtleRescueGoal,
+  instructions: (l) => l.gameTurtleRescueHowTo,
   interactionType: Interaction.tap,
   accent: Ink.mint,
   scoreConfig: const ScoreConfig(base: 3, bonus: 3),

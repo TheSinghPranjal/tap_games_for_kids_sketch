@@ -370,11 +370,14 @@ class Fx {
                   shadows: [Shadow(color: Ink.white, blurRadius: 0, offset: Offset(1.5, 1.5))],
                 ),
               ),
+              textAlign: TextAlign.center,
               textDirection: TextDirection.ltr,
-            )..layout(),
+            )..layout(maxWidth: GameScene.world.width - 16),
           );
+          // Keep longer (translated) messages fully inside the play area.
+          final x = p.pos.dx.clamp(8 + tp.width / 2, GameScene.world.width - 8 - tp.width / 2);
           c.saveLayer(null, Paint()..color = Color.fromRGBO(0, 0, 0, alpha));
-          tp.paint(c, p.pos - Offset(tp.width / 2, tp.height / 2));
+          tp.paint(c, Offset(x - tp.width / 2, p.pos.dy - tp.height / 2));
           c.restore();
       }
     }

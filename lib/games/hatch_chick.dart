@@ -200,7 +200,7 @@ class HatchChickScene extends GameScene {
   }
 
   @override
-  String get progressText => '$hatched chicks';
+  String get progressText => tr.progChicks(hatched);
 
   @override
   void paintProgressIcon(Canvas c, Size s) =>
@@ -209,9 +209,9 @@ class HatchChickScene extends GameScene {
 
 final hatchChickGame = GameDefinition(
   gameId: 'hatch_a_chick',
-  name: 'Hatch-a-Chick',
-  objective: 'Help the baby chicks hatch!',
-  instructions: 'Tap the wobbly egg a few times to help the chick come out.',
+  name: (l) => l.gameHatchChickName,
+  objective: (l) => l.gameHatchChickGoal,
+  instructions: (l) => l.gameHatchChickHowTo,
   interactionType: Interaction.tap,
   accent: Ink.yellow,
   scoreConfig: const ScoreConfig(base: 5, bonus: 5),

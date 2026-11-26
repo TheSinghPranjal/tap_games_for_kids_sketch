@@ -5,6 +5,7 @@ import 'package:flutter/painting.dart';
 import '../core/sketch/ink.dart';
 import '../core/sketch/paper.dart';
 import '../core/sketch/pen.dart';
+import '../l10n/l10n.dart';
 
 export 'dart:math' show Random;
 export 'package:flutter/painting.dart';
@@ -18,6 +19,10 @@ export '../core/engine/game_scene.dart';
 export '../core/sketch/ink.dart';
 export '../core/sketch/paper.dart';
 export '../core/sketch/pen.dart';
+export '../l10n/l10n.dart' show AppLocalizations, L10n;
+
+/// Strings in the player's language for text drawn inside a game.
+AppLocalizations get tr => L10n.current;
 
 /// Short alias for drawing a cached sprite at a position.
 void sprite(

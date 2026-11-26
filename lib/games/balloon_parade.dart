@@ -137,7 +137,7 @@ class BalloonScene extends GameScene {
   }
 
   @override
-  String get progressText => '$popped balloons';
+  String get progressText => tr.progBalloons(popped);
 
   @override
   void paintProgressIcon(Canvas c, Size s) => sprite(
@@ -151,9 +151,9 @@ class BalloonScene extends GameScene {
 
 final balloonParadeGame = GameDefinition(
   gameId: 'balloon_tap_parade',
-  name: 'Balloon Tap Parade',
-  objective: 'Pop the floating balloons!',
-  instructions: 'Tap the balloons before they float away.',
+  name: (l) => l.gameBalloonParadeName,
+  objective: (l) => l.gameBalloonParadeGoal,
+  instructions: (l) => l.gameBalloonParadeHowTo,
   interactionType: Interaction.tap,
   accent: Ink.coral,
   assetManifest: const ['balloon', 'bunting', 'streamer', 'cloud'],

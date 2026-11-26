@@ -71,7 +71,7 @@ class BasketballScene extends GameScene {
       fx.confetti(hoops[i] + const Offset(0, 20), colors: [_hoopColors[i], Ink.yellow]);
     } else {
       // A miss just gets a cheerful "try again" sparkle.
-      fx.floatText(ball, 'So close!');
+      fx.floatText(ball, tr.gameSoClose);
       ctx.onSfx(Sfx.soft);
     }
     _state = _Ball.returning;
@@ -186,12 +186,19 @@ class BasketballScene extends GameScene {
     sprite(c, 'shoot-btn-$ready', shootButton.center, (c) {
       final r = Rect.fromCenter(center: Offset.zero, width: shootButton.width, height: shootButton.height);
       Pen.shape(c, Pen.rrect(r, 18), fill: ready ? Ink.blushPink : Ink.white, solid: true, seed: 5, width: 2.6);
-      Pen.text(c, 'Shoot!', Offset.zero, size: 24, color: ready ? Ink.navy : Ink.navySoft);
+      Pen.text(
+        c,
+        tr.gameShoot,
+        Offset.zero,
+        size: 24,
+        color: ready ? Ink.navy : Ink.navySoft,
+        maxWidth: shootButton.width - 16,
+      );
     }, scale: s);
   }
 
   @override
-  String get progressText => '$baskets baskets';
+  String get progressText => tr.progBaskets(baskets);
 
   @override
   void paintProgressIcon(Canvas c, Size s) =>
@@ -200,9 +207,9 @@ class BasketballScene extends GameScene {
 
 final basketballGame = GameDefinition(
   gameId: 'basketball_hoop_challenge',
-  name: 'Basketball Hoop Challenge',
-  objective: 'Shoot hoops with the arrow!',
-  instructions: 'When the arrow points at a hoop, tap Shoot!',
+  name: (l) => l.gameBasketballName,
+  objective: (l) => l.gameBasketballGoal,
+  instructions: (l) => l.gameBasketballHowTo,
   interactionType: Interaction.tap,
   accent: Ink.orange,
   scoreConfig: const ScoreConfig(base: 5, bonus: 5),

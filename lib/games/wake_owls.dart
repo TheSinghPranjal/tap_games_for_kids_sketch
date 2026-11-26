@@ -181,7 +181,7 @@ class WakeOwlsScene extends GameScene {
   }
 
   @override
-  String get progressText => '$woken wake-ups';
+  String get progressText => tr.progWakeUps(woken);
 
   @override
   void paintProgressIcon(Canvas c, Size s) => sprite(
@@ -195,9 +195,9 @@ class WakeOwlsScene extends GameScene {
 
 final wakeOwlsGame = GameDefinition(
   gameId: 'wake_up_little_owls',
-  name: 'Wake Up, Little Owls',
-  objective: 'Wake the sleepy owls!',
-  instructions: 'Tap a sleeping owl to wake it up and watch it fly.',
+  name: (l) => l.gameWakeOwlsName,
+  objective: (l) => l.gameWakeOwlsGoal,
+  instructions: (l) => l.gameWakeOwlsHowTo,
   interactionType: Interaction.tap,
   accent: Ink.brown,
   scoreConfig: const ScoreConfig(base: 3, bonus: 3),

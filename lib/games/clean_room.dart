@@ -301,7 +301,7 @@ class CleanRoomScene extends GameScene {
     // Toy box.
     final box = _zones[_Home.toyBox]!;
     Pen.shape(c, Pen.rrect(box, 6), fill: Ink.blue, seed: 9);
-    Pen.text(c, 'TOYS', box.center + const Offset(0, 10), size: 18, color: Ink.white);
+    Pen.text(c, tr.gameToyBox, box.center + const Offset(0, 10), size: 18, color: Ink.white, maxWidth: box.width - 8);
     // Laundry basket.
     final lb = _zones[_Home.laundry]!;
     Pen.shape(
@@ -318,7 +318,10 @@ class CleanRoomScene extends GameScene {
   @override
   void paint(Canvas c) {
     // Mode toggle: Tap or Drag.
-    for (final (r, on, label) in [(tapModeBtn, !dragMode, 'Tap'), (dragModeBtn, dragMode, 'Drag')]) {
+    for (final (r, on, label) in [
+      (tapModeBtn, !dragMode, tr.interactionTap),
+      (dragModeBtn, dragMode, tr.interactionDrag),
+    ]) {
       sprite(c, 'room-mode-$label-$on', r.center, (c) {
         Pen.shape(
           c,
@@ -328,7 +331,7 @@ class CleanRoomScene extends GameScene {
           seed: label.length,
           width: on ? 2.6 : 1.8,
         );
-        Pen.text(c, label, Offset.zero, size: 17, color: on ? Ink.navy : Ink.navySoft);
+        Pen.text(c, label, Offset.zero, size: 17, color: on ? Ink.navy : Ink.navySoft, maxWidth: r.width - 12);
       });
     }
     // Cleanliness meter.
@@ -385,7 +388,7 @@ class CleanRoomScene extends GameScene {
   }
 
   @override
-  String get progressText => '${(cleanliness * 100).round()}% clean';
+  String get progressText => tr.progClean((cleanliness * 100).round());
 
   @override
   void paintProgressIcon(Canvas c, Size s) =>
@@ -394,9 +397,9 @@ class CleanRoomScene extends GameScene {
 
 final cleanRoomGame = GameDefinition(
   gameId: 'clean_my_room',
-  name: 'Clean My Room',
-  objective: 'Put toys, books and clothes away!',
-  instructions: 'Tap a messy thing to tidy it, or switch to Drag and move it home.',
+  name: (l) => l.gameCleanRoomName,
+  objective: (l) => l.gameCleanRoomGoal,
+  instructions: (l) => l.gameCleanRoomHowTo,
   interactionType: Interaction.tapDrag,
   accent: Ink.purple,
   scoreConfig: const ScoreConfig(base: 3, bonus: 8),

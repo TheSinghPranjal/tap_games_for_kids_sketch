@@ -207,7 +207,7 @@ class BeachScene extends GameScene {
   }
 
   @override
-  String get progressText => '$found treasures';
+  String get progressText => tr.progTreasures(found);
 
   @override
   void paintProgressIcon(Canvas c, Size s) =>
@@ -216,9 +216,9 @@ class BeachScene extends GameScene {
 
 final beachTreasuresGame = GameDefinition(
   gameId: 'sandy_beach_treasures',
-  name: 'Sandy Beach Treasures',
-  objective: 'Find shells and starfish!',
-  instructions: 'Tap the treasures on the sand. Golden shells are extra special!',
+  name: (l) => l.gameBeachTreasuresName,
+  objective: (l) => l.gameBeachTreasuresGoal,
+  instructions: (l) => l.gameBeachTreasuresHowTo,
   interactionType: Interaction.tap,
   accent: Ink.sand,
   assetManifest: const ['seashell', 'starfish', 'crab', 'chest'],

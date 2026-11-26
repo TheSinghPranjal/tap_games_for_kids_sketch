@@ -17,6 +17,7 @@ class Paper {
     double cell = 20,
     bool speckles = true,
     double lineAlpha = 1,
+    Color? speckle,
   }) {
     c.drawRect(r, Paint()..color = base);
     final p = Paint()
@@ -30,7 +31,7 @@ class Paper {
     }
     if (speckles) {
       final rng = math.Random(7);
-      final sp = Paint()..color = Ink.pencil.withValues(alpha: 0.12);
+      final sp = Paint()..color = speckle ?? Ink.pencil.withValues(alpha: 0.12);
       final n = (r.width * r.height / 9000).round();
       for (var i = 0; i < n; i++) {
         c.drawCircle(
@@ -74,21 +75,36 @@ class Paper {
 }
 
 class GraphPaperBackground extends StatelessWidget {
-  const GraphPaperBackground({super.key, required this.child});
+  const GraphPaperBackground({
+    super.key,
+    required this.child,
+    this.base = Ink.paper,
+    this.line = Ink.grid,
+    this.speckle,
+  });
   final Widget child;
+  final Color base;
+  final Color line;
+  final Color? speckle;
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(painter: _GraphPainter(), child: child);
+    return CustomPaint(painter: _GraphPainter(base, line, speckle), child: child);
   }
 }
 
 class _GraphPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) => Paper.graph(canvas, Offset.zero & size);
+  _GraphPainter(this.base, this.line, this.speckle);
+  final Color base;
+  final Color line;
+  final Color? speckle;
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  void paint(Canvas canvas, Size size) =>
+      Paper.graph(canvas, Offset.zero & size, base: base, line: line, speckle: speckle);
+
+  @override
+  bool shouldRepaint(covariant _GraphPainter o) => o.base != base || o.line != line || o.speckle != speckle;
 }
 
 /// Wavy coral underline, like a highlighter scribble under a title.

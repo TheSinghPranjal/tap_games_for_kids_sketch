@@ -4,6 +4,7 @@ import 'package:flutter/painting.dart';
 
 import '../core/sketch/ink.dart';
 import '../core/sketch/pen.dart';
+import 'nature.dart';
 
 /// Props, containers and collectables, drawn around the origin.
 class Props {
@@ -298,8 +299,303 @@ class Props {
     Pen.shape(c, p, fill: const Color(0xFFFFE2C8), solid: true, hatch: Ink.coral.withValues(alpha: 0.35), seed: 2);
   }
 
-  /// TinyThink's pencil mascot.
-  static void mascot(Canvas c, {Mood mood = Mood.happy}) {
+  /// Cartoon rocket pointing up, ~40x64 centred on the body. [flame] 0..1
+  /// sets the exhaust length (0 = parked).
+  static void rocket(Canvas c, {Color color = Ink.coral, double flame = 0, int seed = 1}) {
+    if (flame > 0) {
+      final f = 14 + flame * 18;
+      Pen.shape(
+        c,
+        Path()
+          ..moveTo(-8, 22)
+          ..quadraticBezierTo(-6, 22 + f * 0.7, 0, 22 + f)
+          ..quadraticBezierTo(6, 22 + f * 0.7, 8, 22)
+          ..close(),
+        fill: Ink.orange,
+        solid: true,
+        hatch: Ink.coral,
+        width: 1.8,
+        seed: seed,
+        doubleLine: false,
+      );
+      Pen.shape(
+        c,
+        Path()
+          ..moveTo(-4, 22)
+          ..quadraticBezierTo(-3, 22 + f * 0.45, 0, 22 + f * 0.62)
+          ..quadraticBezierTo(3, 22 + f * 0.45, 4, 22)
+          ..close(),
+        fill: Ink.yellow,
+        solid: true,
+        width: 0,
+      );
+    }
+    for (final s in [-1.0, 1.0]) {
+      Pen.shape(
+        c,
+        Pen.poly([Offset(s * 10, 2), Offset(s * 20, 20), Offset(s * 20, 26), Offset(s * 9, 18)]),
+        fill: color,
+        solid: true,
+        hatch: Ink.shade(color, 0.15),
+        width: 2,
+        seed: seed + 2,
+      );
+    }
+    Pen.shape(c, Pen.rrect(const Rect.fromLTWH(-7, 16, 14, 8), 2), fill: Ink.navySoft, solid: true, width: 1.8);
+    final body = Path()
+      ..moveTo(0, -32)
+      ..cubicTo(10, -24, 13, -8, 12, 18)
+      ..lineTo(-12, 18)
+      ..cubicTo(-13, -8, -10, -24, 0, -32)
+      ..close();
+    Pen.shape(c, body, fill: Ink.white, solid: true, hatch: Ink.grid, seed: seed);
+    c.save();
+    c.clipPath(body);
+    c.drawRect(const Rect.fromLTWH(-14, -34, 28, 14), Pen.fillPaint(color));
+    c.restore();
+    Pen.stroke(c, body, width: 2.2, seed: seed);
+    Pen.shape(
+      c,
+      Pen.circle(const Offset(0, -4), 6.5),
+      fill: Ink.sky,
+      solid: true,
+      hatch: Ink.blue,
+      width: 2,
+      seed: seed + 4,
+    );
+    Pen.dot(c, const Offset(-2, -6), 1.6, Ink.white);
+  }
+
+  /// Waffle cone, origin at the centre of its rim, ~48x62.
+  static void cone(Canvas c, {int seed = 1}) {
+    final body = Pen.poly(const [Offset(-21, 2), Offset(21, 2), Offset(0, 58)]);
+    Pen.shape(
+      c,
+      body,
+      fill: Ink.sand,
+      solid: true,
+      hatch: Ink.brown.withValues(alpha: 0.6),
+      cross: true,
+      hatchGap: 7,
+      seed: seed,
+    );
+    Pen.shape(
+      c,
+      Pen.rrect(const Rect.fromLTWH(-25, -6, 50, 12), 6),
+      fill: Ink.sand,
+      solid: true,
+      hatch: Ink.brown.withValues(alpha: 0.4),
+      seed: seed + 2,
+    );
+  }
+
+  /// Round ice-cream scoop with a drippy bottom and a smile, radius ~22.
+  static void scoop(Canvas c, Color color, {bool sprinkles = false, int seed = 1}) {
+    var p = Pen.circle(Offset.zero, 22);
+    for (final (x, y) in [(-15.0, 14.0), (-4.0, 18.0), (8.0, 17.0), (17.0, 12.0)]) {
+      p = Path.combine(PathOperation.union, p, Pen.circle(Offset(x, y), 7));
+    }
+    Pen.shape(c, p, fill: color, solid: true, hatch: Ink.shade(color, 0.12), seed: seed);
+    c.drawPath(
+      Path()..addArc(Rect.fromCircle(center: Offset.zero, radius: 15), 3.6, 1.0),
+      Pen.inkPaint(Ink.white.withValues(alpha: 0.8), 3),
+    );
+    if (sprinkles) {
+      final r = math.Random(seed);
+      for (var i = 0; i < 9; i++) {
+        final o = Offset(r.nextDouble() * 32 - 16, r.nextDouble() * 18 - 18);
+        final a = r.nextDouble() * math.pi;
+        final d = Offset(math.cos(a), math.sin(a)) * 3;
+        c.drawLine(o - d, o + d, Pen.inkPaint(Ink.bright[i % Ink.bright.length], 2.4));
+      }
+    }
+    Pen.face(c, const Offset(0, 4), 20);
+  }
+
+  /// Zig-zag crack lines; more appear as [amount] goes from 0 to 1.
+  static void _cracks(Canvas c, double half, double amount, int seed) {
+    if (amount <= 0) return;
+    final r = math.Random(seed);
+    final n = (amount * 4).ceil();
+    for (var i = 0; i < n; i++) {
+      final a = r.nextDouble() * math.pi * 2;
+      var p = Offset(math.cos(a), math.sin(a)) * half * 0.15;
+      final crack = Path()..moveTo(p.dx, p.dy);
+      for (var k = 0; k < 3; k++) {
+        p += Offset(math.cos(a + (k.isEven ? 0.6 : -0.6)), math.sin(a + (k.isEven ? 0.6 : -0.6))) * half * 0.28;
+        crack.lineTo(p.dx, p.dy);
+      }
+      c.drawPath(crack, Pen.inkPaint(Ink.navy, 2.2));
+    }
+  }
+
+  /// Wooden mine crate, [w] wide, centred. [damage] 0..1 adds cracks.
+  static void crate(Canvas c, double w, {double damage = 0, int seed = 1}) {
+    final h = w / 2;
+    final box = Pen.rrect(Rect.fromCenter(center: Offset.zero, width: w, height: w), 6);
+    Pen.shape(
+      c,
+      box,
+      fill: const Color(0xFFD9A066),
+      solid: true,
+      hatch: Ink.brown.withValues(alpha: 0.45),
+      hatchAngle: 0,
+      seed: seed,
+    );
+    final edge = Pen.inkPaint(Ink.shade(Ink.brown, 0.25), 3);
+    c.drawRect(
+      Rect.fromCenter(center: Offset.zero, width: w - 16, height: w - 16),
+      Pen.inkPaint(Ink.shade(Ink.brown, 0.25), 2),
+    );
+    c.drawLine(Offset(-h + 8, -h + 8), Offset(h - 8, h - 8), edge);
+    c.drawLine(Offset(h - 8, -h + 8), Offset(-h + 8, h - 8), edge);
+    for (final o in [Offset(-h + 5, -h + 5), Offset(h - 5, -h + 5), Offset(-h + 5, h - 5), Offset(h - 5, h - 5)]) {
+      Pen.dot(c, o, 2.2, Ink.pencil);
+    }
+    _cracks(c, h, damage, seed + 11);
+  }
+
+  /// Shiny coloured box with a "?" on it, [w] wide, centred.
+  static void gemBox(Canvas c, Color color, double w, {double damage = 0, int seed = 1}) {
+    final h = w / 2;
+    Pen.shape(
+      c,
+      Pen.rrect(Rect.fromCenter(center: const Offset(0, 4), width: w, height: w - 8), 10),
+      fill: color,
+      solid: true,
+      hatch: Ink.shade(color, 0.15),
+      seed: seed,
+    );
+    Pen.shape(
+      c,
+      Pen.rrect(Rect.fromLTWH(-h - 3, -h, w + 6, w * 0.26), 6),
+      fill: Ink.tint(color, 0.7),
+      solid: true,
+      hatch: color,
+      seed: seed + 1,
+    );
+    c.drawPath(
+      Path()
+        ..moveTo(-h + 10, -h * 0.2)
+        ..lineTo(-h + 10, h * 0.5),
+      Pen.inkPaint(Ink.white.withValues(alpha: 0.7), 3),
+    );
+    Pen.text(c, '?', Offset(0, h * 0.25), size: w * 0.42, color: Ink.white);
+    _cracks(c, h, damage, seed + 5);
+  }
+
+  /// Little hammer, head at the origin pointing left, handle going down-right.
+  static void hammer(Canvas c) {
+    Pen.shape(
+      c,
+      Pen.rrect(const Rect.fromLTWH(-4, -2, 8, 44), 3),
+      fill: Ink.brown,
+      solid: true,
+      hatch: Ink.shade(Ink.brown, 0.2),
+      seed: 2,
+      width: 2,
+    );
+    Pen.shape(
+      c,
+      Pen.rrect(const Rect.fromLTWH(-18, -12, 36, 16), 4),
+      fill: const Color(0xFFB8BCC8),
+      solid: true,
+      hatch: Ink.navySoft.withValues(alpha: 0.4),
+      seed: 3,
+      width: 2.2,
+    );
+  }
+
+  // ---- fruit (each ~40 across, centred) ----------------------------------
+
+  static void apple(Canvas c) {
+    Pen.line(c, const Offset(0, -14), const Offset(3, -24), ink: Ink.brown, width: 3);
+    c.save();
+    c.translate(4, -20);
+    c.rotate(-0.5);
+    Nature.leaf(c, 14, color: Ink.mint, width: 0.45);
+    c.restore();
+    final body = Path()
+      ..moveTo(0, -12)
+      ..cubicTo(10, -20, 22, -12, 20, 2)
+      ..cubicTo(18, 16, 8, 20, 0, 16)
+      ..cubicTo(-8, 20, -18, 16, -20, 2)
+      ..cubicTo(-22, -12, -10, -20, 0, -12)
+      ..close();
+    Pen.shape(c, body, fill: Ink.coral, solid: true, hatch: Ink.shade(Ink.coral, 0.15), seed: 11);
+    Pen.twinkle(c, const Offset(-9, -5), 4, Ink.white);
+    Pen.face(c, const Offset(0, 3), 16);
+  }
+
+  static void banana(Canvas c) {
+    final body = Path()
+      ..moveTo(-22, -10)
+      ..quadraticBezierTo(-12, 18, 22, 6)
+      ..quadraticBezierTo(24, 10, 20, 12)
+      ..quadraticBezierTo(-18, 26, -26, -8)
+      ..close();
+    Pen.shape(c, body, fill: Ink.yellow, solid: true, hatch: Ink.gold, seed: 12);
+    Pen.shape(
+      c,
+      Pen.rrect(const Rect.fromLTWH(-28, -14, 6, 8), 2),
+      fill: Ink.brown,
+      solid: true,
+      width: 1.6,
+      doubleLine: false,
+    );
+    Pen.face(c, const Offset(-2, 8), 13);
+  }
+
+  static void orange(Canvas c) {
+    Pen.shape(
+      c,
+      Pen.circle(const Offset(0, 2), 19),
+      fill: Ink.orange,
+      solid: true,
+      hatch: Ink.shade(Ink.orange, 0.12),
+      cross: true,
+      hatchGap: 6,
+      seed: 13,
+    );
+    c.save();
+    c.translate(1, -16);
+    c.rotate(-0.4);
+    Nature.leaf(c, 14, color: Ink.mint, width: 0.45);
+    c.restore();
+    Pen.twinkle(c, const Offset(-8, -4), 4, Ink.white);
+    Pen.face(c, const Offset(0, 5), 16);
+  }
+
+  static void grapes(Canvas c) {
+    Pen.line(c, const Offset(0, -20), const Offset(2, -26), ink: Ink.brown, width: 3);
+    for (final o in const [
+      Offset(-10, -12),
+      Offset(0, -14),
+      Offset(10, -12),
+      Offset(-5, -2),
+      Offset(5, -2),
+      Offset(-12, -2),
+      Offset(12, -2),
+      Offset(-6, 8),
+      Offset(6, 8),
+      Offset(0, 17),
+    ]) {
+      Pen.shape(
+        c,
+        Pen.circle(o, 6.5),
+        fill: Ink.purple,
+        solid: true,
+        hatch: Ink.shade(Ink.purple, 0.15),
+        width: 1.6,
+        seed: o.dx.round() + 20,
+        doubleLine: false,
+      );
+    }
+    Pen.face(c, const Offset(0, 0), 13);
+  }
+
+  /// TinyThink's pencil mascot. [cheer] raises both arms in a hooray.
+  static void mascot(Canvas c, {Mood mood = Mood.happy, bool cheer = false}) {
     final body = Pen.rrect(const Rect.fromLTWH(-16, -26, 32, 46), 6);
     Pen.shape(c, body, fill: Ink.yellow, solid: true, hatch: Ink.gold, seed: 1);
     Pen.shape(c, Pen.rrect(const Rect.fromLTWH(-16, -36, 32, 12), 4), fill: Ink.pink, solid: true, seed: 2);
@@ -314,7 +610,23 @@ class Props {
     );
     Pen.face(c, const Offset(0, -4), 26, mood: mood);
     for (final s in [-1.0, 1.0]) {
-      Pen.line(c, Offset(s * 16, 0), Offset(s * 26, s > 0 ? -12 : 8), width: 2.4);
+      if (cheer) {
+        final hand = Offset(s * 30, -22);
+        Pen.stroke(
+          c,
+          Path()
+            ..moveTo(s * 16, -4)
+            ..quadraticBezierTo(s * 26, -6, hand.dx, hand.dy),
+          width: 2.4,
+        );
+        // Tiny three-finger wave.
+        for (final a in [-0.5, 0.0, 0.5]) {
+          final d = Offset(s * math.sin(a + 0.4), -math.cos(a + 0.4));
+          Pen.line(c, hand, hand + d * 5, width: 2);
+        }
+      } else {
+        Pen.line(c, Offset(s * 16, 0), Offset(s * 26, s > 0 ? -12 : 8), width: 2.4);
+      }
     }
   }
 

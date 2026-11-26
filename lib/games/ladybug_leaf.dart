@@ -147,7 +147,7 @@ class LadybugScene extends GameScene {
   }
 
   @override
-  String get progressText => '$helped ladybugs';
+  String get progressText => tr.progLadybugs(helped);
 
   @override
   void paintProgressIcon(Canvas c, Size s) =>
@@ -156,9 +156,9 @@ class LadybugScene extends GameScene {
 
 final ladybugGame = GameDefinition(
   gameId: 'ladybug_leaf_tap',
-  name: 'Ladybug Leaf Tap',
-  objective: 'Help ladybugs fly off the leaves!',
-  instructions: 'Tap a crawling ladybug to help it fly. Golden ones are extra special!',
+  name: (l) => l.gameLadybugName,
+  objective: (l) => l.gameLadybugGoal,
+  instructions: (l) => l.gameLadybugHowTo,
   interactionType: Interaction.tap,
   accent: Ink.coral,
   assetManifest: const ['ladybug', 'ladybug-gold', 'leaf'],

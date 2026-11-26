@@ -227,7 +227,7 @@ class PearlDiverScene extends GameScene {
   }
 
   @override
-  String get progressText => '$pearls pearls';
+  String get progressText => tr.progPearls(pearls);
 
   @override
   void paintProgressIcon(Canvas c, Size s) =>
@@ -236,9 +236,9 @@ class PearlDiverScene extends GameScene {
 
 final pearlDiverGame = GameDefinition(
   gameId: 'pearl_diver',
-  name: 'Pearl Diver',
-  objective: 'Collect pearls from the shells!',
-  instructions: 'When a shell opens and shows its pearl, tap it!',
+  name: (l) => l.gamePearlDiverName,
+  objective: (l) => l.gamePearlDiverGoal,
+  instructions: (l) => l.gamePearlDiverHowTo,
   interactionType: Interaction.tap,
   accent: Ink.blue,
   assetManifest: const ['clam', 'pearl', 'seabird', 'seaweed', 'jar'],

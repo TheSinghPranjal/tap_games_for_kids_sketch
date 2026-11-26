@@ -7,9 +7,11 @@ import 'core/engine/audio_manager.dart';
 import 'core/engine/game_definition.dart';
 import 'core/rewards/reward_service.dart';
 import 'core/rewards/reward_store.dart';
-import 'core/sketch/ink.dart';
+import 'core/sketch/pen.dart';
 import 'games/catalog.dart';
-import 'screens/hub_screen.dart';
+import 'l10n/l10n.dart';
+import 'screens/splash_screen.dart';
+import 'ui/sketch_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +24,8 @@ Future<void> main() async {
   final rewards = RewardService(store: PrefsRewardStore(), isGameEnabled: registry.isEnabled);
   await rewards.init();
 
-  runApp(TinyThinkApp(rewards: rewards, settings: settings, audio: AudioManager(settings), registry: registry));
+  final audio = AudioManager(settings)..start();
+  runApp(TinyThinkApp(rewards: rewards, settings: settings, audio: audio, registry: registry));
 }
 
 class TinyThinkApp extends StatelessWidget {
@@ -46,16 +49,45 @@ class TinyThinkApp extends StatelessWidget {
       settings: settings,
       audio: audio,
       registry: registry,
-      child: MaterialApp(
-        title: 'TinyThink',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          scaffoldBackgroundColor: Ink.paper,
-          colorScheme: ColorScheme.fromSeed(seedColor: Ink.navy, surface: Ink.paper),
-          splashFactory: NoSplash.splashFactory,
+      child: ListenableBuilder(
+        listenable: settings,
+        builder: (context, _) => MaterialApp(
+          onGenerateTitle: (context) => context.l10n.appTitle,
+          debugShowCheckedModeBanner: false,
+          locale: L10n.byCode(settings.languageCode).locale,
+          supportedLocales: AppLocalizations.supportedLocales,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          theme: sketchLightTheme,
+          darkTheme: sketchDarkTheme,
+          themeMode: settings.themeMode,
+          // Light <-> dark cross-fades instead of snapping.
+          themeAnimationDuration: settings.effectiveReducedMotion ? Duration.zero : const Duration(milliseconds: 380),
+          themeAnimationCurve: Curves.easeInOut,
+          builder: (context, child) => _LocaleSync(child: child!),
+          home: const SplashScreen(),
         ),
-        home: const HubScreen(),
       ),
     );
+  }
+}
+
+/// Points [L10n.current] (used by game scenes drawn on a canvas) at the
+/// active language, and drops cached sprites that may contain old text.
+class _LocaleSync extends StatelessWidget {
+  const _LocaleSync({required this.child});
+  final Widget child;
+
+  static Locale? _last;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final locale = Localizations.localeOf(context);
+    if (_last != locale) {
+      if (_last != null) SpriteCache.clear();
+      _last = locale;
+    }
+    L10n.current = l10n;
+    return child;
   }
 }

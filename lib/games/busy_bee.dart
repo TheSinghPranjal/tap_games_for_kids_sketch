@@ -210,7 +210,7 @@ class BusyBeeScene extends GameScene {
   }
 
   @override
-  String get progressText => '$blooms blooms';
+  String get progressText => tr.progBlooms(blooms);
 
   @override
   void paintProgressIcon(Canvas c, Size s) {
@@ -225,9 +225,9 @@ class BusyBeeScene extends GameScene {
 
 final busyBeeGame = GameDefinition(
   gameId: 'busy_bee_garden',
-  name: 'Busy Bee Garden',
-  objective: 'Help the bees bloom flowers!',
-  instructions: 'Tap a bee when it visits a bud to make the flower bloom.',
+  name: (l) => l.gameBusyBeeName,
+  objective: (l) => l.gameBusyBeeGoal,
+  instructions: (l) => l.gameBusyBeeHowTo,
   interactionType: Interaction.tap,
   accent: Ink.yellow,
   scoreConfig: const ScoreConfig(base: 3, bonus: 6),

@@ -1,6 +1,6 @@
 import 'common.dart';
 
-const _colors = [Ink.orange, Ink.coral, Ink.yellow, Ink.blue];
+const _colors = Critters.fishColors;
 
 class _Jumper {
   _Jumper(this.id, this.start, this.vx, this.vy, this.g, this.color);
@@ -196,7 +196,7 @@ class PenguinFeastScene extends GameScene {
   }
 
   @override
-  String get progressText => '$eaten yummy fish';
+  String get progressText => tr.progYummyFish(eaten);
 
   @override
   void paintProgressIcon(Canvas c, Size s) =>
@@ -205,9 +205,9 @@ class PenguinFeastScene extends GameScene {
 
 final penguinFeastGame = GameDefinition(
   gameId: 'penguin_fish_feast',
-  name: 'Penguin Fish Feast',
-  objective: 'Feed the hungry baby penguin!',
-  instructions: 'Tap a jumping fish to send it to the penguin.',
+  name: (l) => l.gamePenguinFeastName,
+  objective: (l) => l.gamePenguinFeastGoal,
+  instructions: (l) => l.gamePenguinFeastHowTo,
   interactionType: Interaction.tap,
   accent: Ink.blue,
   assetManifest: const ['penguin', 'fish', 'ice-floe', 'hill', 'snow'],
@@ -222,6 +222,6 @@ final penguinFeastGame = GameDefinition(
       (c) => waterBody(c, Path()..addRect(const Rect.fromLTRB(-200, -10, 200, 60)), color: Ink.tint(Ink.blue, 0.7)),
     );
     Thumb.put(c, s, 0.25, 0.58, (c) => Critters.penguin(c), scale: 0.95);
-    Thumb.put(c, s, 0.68, 0.32, (c) => Critters.fish(c, Ink.orange), rotation: -0.5);
+    Thumb.put(c, s, 0.68, 0.32, (c) => Critters.fish(c, Ink.orange, seed: 4), rotation: -0.5);
   },
 );

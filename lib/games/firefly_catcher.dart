@@ -146,7 +146,7 @@ class FireflyScene extends GameScene {
   }
 
   @override
-  String get progressText => '$caught fireflies';
+  String get progressText => tr.progFireflies(caught);
 
   @override
   void paintProgressIcon(Canvas c, Size s) {
@@ -157,9 +157,9 @@ class FireflyScene extends GameScene {
 
 final fireflyGame = GameDefinition(
   gameId: 'firefly_catcher',
-  name: 'Firefly Catcher',
-  objective: 'Light up the night garden!',
-  instructions: 'Tap the glowing fireflies before they fly away.',
+  name: (l) => l.gameFireflyName,
+  objective: (l) => l.gameFireflyGoal,
+  instructions: (l) => l.gameFireflyHowTo,
   interactionType: Interaction.tap,
   accent: Ink.yellow,
   assetManifest: const ['firefly', 'moon', 'flower', 'bush'],

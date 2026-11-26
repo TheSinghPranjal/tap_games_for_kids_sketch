@@ -23,6 +23,10 @@ class AppScope extends InheritedWidget {
 
   static AppScope of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<AppScope>()!;
 
+  /// Like [of], but null outside the app (e.g. widget previews) and without
+  /// registering a dependency.
+  static AppScope? maybeOf(BuildContext context) => context.getInheritedWidgetOfExactType<AppScope>();
+
   @override
   bool updateShouldNotify(AppScope old) =>
       rewards != old.rewards || settings != old.settings || registry != old.registry;

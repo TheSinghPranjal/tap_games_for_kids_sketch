@@ -191,7 +191,7 @@ class ButterflyScene extends GameScene {
   }
 
   @override
-  String get progressText => '$caught butterflies';
+  String get progressText => tr.progButterflies(caught);
 
   @override
   void paintProgressIcon(Canvas c, Size s) => _draw(c, s.center(Offset.zero), 0, 1, s.width / 56);
@@ -199,9 +199,9 @@ class ButterflyScene extends GameScene {
 
 final butterflyGame = GameDefinition(
   gameId: 'butterfly_catch',
-  name: 'Butterfly Catch',
-  objective: 'Guide butterflies to their garden!',
-  instructions: 'Tap a fluttering butterfly to send it to the garden.',
+  name: (l) => l.gameButterflyName,
+  objective: (l) => l.gameButterflyGoal,
+  instructions: (l) => l.gameButterflyHowTo,
   interactionType: Interaction.tap,
   accent: Ink.purple,
   assetManifest: const ['butterfly', 'fence', 'flower', 'garden'],

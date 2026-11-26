@@ -249,6 +249,7 @@ class Pen {
     Color color = Ink.navy,
     FontWeight weight = FontWeight.w900,
     bool italic = false,
+    double? maxWidth,
   }) {
     final tp = TextPainter(
       text: TextSpan(
@@ -262,6 +263,16 @@ class Pen {
       ),
       textDirection: TextDirection.ltr,
     )..layout();
+    // Longer translations shrink to fit instead of spilling out of signs.
+    if (maxWidth != null && tp.width > maxWidth) {
+      final k = maxWidth / tp.width;
+      c.save();
+      c.translate(center.dx, center.dy);
+      c.scale(k);
+      tp.paint(c, Offset(-tp.width / 2, -tp.height / 2));
+      c.restore();
+      return;
+    }
     tp.paint(c, center - Offset(tp.width / 2, tp.height / 2));
   }
 }
@@ -272,7 +283,15 @@ class SpriteCache {
   SpriteCache._();
   static final _cache = <String, ui.Picture>{};
 
-  static void draw(Canvas canvas, String key, void Function(Canvas c) build) {
+  /// Forgets every sprite, e.g. after the language changes (some sprites
+  /// contain text).
+  static void clear() => _cache.clear();
+
+  static void draw(Canvas canvas, String key, void Function(Canvas c) build, {bool cache = true}) {
+    if (!cache) {
+      build(canvas);
+      return;
+    }
     var pic = _cache[key];
     if (pic == null) {
       final rec = ui.PictureRecorder();

@@ -188,7 +188,7 @@ class RaindropScene extends GameScene {
   }
 
   @override
-  String get progressText => '$collected drops';
+  String get progressText => tr.progDrops(collected);
 
   @override
   void paintProgressIcon(Canvas c, Size s) =>
@@ -197,9 +197,9 @@ class RaindropScene extends GameScene {
 
 final raindropGame = GameDefinition(
   gameId: 'rainbow_raindrop_catch',
-  name: 'Rainbow Raindrop Catch',
-  objective: 'Fill the jar for a thirsty friend!',
-  instructions: 'Tap the falling raindrops to fill up the jar.',
+  name: (l) => l.gameRaindropName,
+  objective: (l) => l.gameRaindropGoal,
+  instructions: (l) => l.gameRaindropHowTo,
   interactionType: Interaction.tap,
   accent: Ink.blue,
   scoreConfig: const ScoreConfig(base: 2, bonus: 5),

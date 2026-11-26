@@ -286,4 +286,33 @@ class Nature {
     );
     if (face) Pen.face(c, Offset(0, r * 0.08), r * 0.8, blush: true);
   }
+
+  /// Round smiling planet with craters.
+  static void planet(Canvas c, double r, {Color color = Ink.purple, int seed = 1}) {
+    Pen.shape(
+      c,
+      Pen.circle(Offset.zero, r),
+      fill: color,
+      solid: true,
+      hatch: Ink.shade(color, 0.15),
+      seed: seed,
+      width: 2.6,
+    );
+    for (final (o, cr) in [
+      (const Offset(-0.45, -0.35), 0.16),
+      (const Offset(0.5, 0.15), 0.12),
+      (const Offset(-0.2, 0.55), 0.1),
+    ]) {
+      Pen.shape(
+        c,
+        Pen.circle(o * r, cr * r),
+        fill: Ink.shade(color, 0.12),
+        solid: true,
+        width: 1.4,
+        seed: seed + 3,
+        doubleLine: false,
+      );
+    }
+    Pen.face(c, Offset(r * 0.05, -r * 0.02), r * 0.7);
+  }
 }

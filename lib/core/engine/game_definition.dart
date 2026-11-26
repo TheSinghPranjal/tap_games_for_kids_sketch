@@ -1,17 +1,21 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 
+import '../../l10n/l10n.dart';
 import 'game_scene.dart';
+
+/// A piece of text looked up in the player's language.
+typedef LocalizedText = String Function(AppLocalizations l);
 
 enum Interaction { tap, drag, tapDrag }
 
 extension InteractionX on Interaction {
   bool get isTap => this != Interaction.drag;
   bool get isDrag => this != Interaction.tap;
-  String get label => switch (this) {
-    Interaction.tap => 'Tap',
-    Interaction.drag => 'Drag',
-    Interaction.tapDrag => 'Tap + Drag',
+  String label(AppLocalizations l) => switch (this) {
+    Interaction.tap => l.interactionTap,
+    Interaction.drag => l.interactionDrag,
+    Interaction.tapDrag => l.interactionTapDrag,
   };
 }
 
@@ -42,13 +46,13 @@ class GameDefinition {
   });
 
   final String gameId;
-  final String name;
+  final LocalizedText name;
 
   /// Short line for the hub card.
-  final String objective;
+  final LocalizedText objective;
 
   /// One sentence for the intro screen.
-  final String instructions;
+  final LocalizedText instructions;
   final Interaction interactionType;
   final Color accent;
   final ScoreConfig scoreConfig;

@@ -169,7 +169,7 @@ class StarCollectorScene extends GameScene {
   }
 
   @override
-  String get progressText => '$collected stars';
+  String get progressText => tr.progStars(collected);
 
   @override
   void paintProgressIcon(Canvas c, Size s) => _drawStar(c, s.center(Offset.zero), false, s.width * 0.45, 0);
@@ -177,9 +177,9 @@ class StarCollectorScene extends GameScene {
 
 final starCollectorGame = GameDefinition(
   gameId: 'star_collector',
-  name: 'Star Collector',
-  objective: 'Collect twinkling stars!',
-  instructions: 'Tap the stars. Big golden stars are extra special!',
+  name: (l) => l.gameStarCollectorName,
+  objective: (l) => l.gameStarCollectorGoal,
+  instructions: (l) => l.gameStarCollectorHowTo,
   interactionType: Interaction.tap,
   accent: Ink.purple,
   scoreConfig: const ScoreConfig(base: 2, bonus: 6),
