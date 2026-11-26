@@ -1,0 +1,628 @@
+{
+  "@@locale": "en",
+  "appTitle": "TinyThink",
+  "homeTitleLine1": "Tap & Drag",
+  "@homeTitleLine1": {
+    "description": "First line of the colourful title sign. Each word gets its own colour."
+  },
+  "homeTitleLine2": "Games",
+  "@homeTitleLine2": {
+    "description": "Second line of the title sign."
+  },
+  "homeTitleSemantics": "Tap and Drag Games",
+  "@homeTitleSemantics": {
+    "description": "Screen-reader label for the title sign."
+  },
+  "homePlayGames": "Play\nGames",
+  "@homePlayGames": {
+    "description": "Big home button; may use a line break."
+  },
+  "homeRewards": "Rewards",
+  "rewardsTitle": "My Rewards",
+  "rewardsGemsSaved": "gems saved",
+  "rewardsStarsToday": "{count, plural, =1{1 star today} other{{count} stars today}}",
+  "@rewardsStarsToday": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rewardsStarsPerGem": "Every {points} stars = 1 gem",
+  "@rewardsStarsPerGem": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "rewardsFreePlaysPerDay": "{count} free plays per game each day",
+  "@rewardsFreePlaysPerDay": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rewardsYay": "Yay!",
+  "hubTitle": "Tap & Drag Games",
+  "hubSubtitle": "Pick a game and play!",
+  "filterAll": "All Games",
+  "filterTap": "Tap",
+  "filterDrag": "Drag",
+  "filterFavorites": "Favorites",
+  "interactionTap": "Tap",
+  "@interactionTap": {
+    "description": "Game type tag, and the Tap mode button."
+  },
+  "interactionDrag": "Drag",
+  "@interactionDrag": {
+    "description": "Game type tag, and the Drag mode button."
+  },
+  "interactionTapDrag": "Tap + Drag",
+  "favoriteAdd": "Add favorite",
+  "favoriteRemove": "Remove favorite",
+  "freePlaysLeftToday": "{count, plural, =1{1 free play left today} other{{count} free plays left today}}",
+  "@freePlaysLeftToday": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "nextPlayCostsGem": "Next play costs 1 gem",
+  "play": "Play",
+  "resting": "Resting",
+  "favoritesEmpty": "Tap a heart to save your favorite games here!",
+  "moreDragGamesSoon": "More drag games are coming soon!",
+  "back": "Back",
+  "settings": "Settings",
+  "gemsCount": "{count, plural, =1{1 gem} other{{count} gems}}",
+  "@gemsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noGemsTitle": "No gems right now",
+  "noGemsBody": "You used your {count} free plays of this game today. Earn gems in other games, or come back tomorrow!",
+  "@noGemsBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "restingTitle": "This game is resting",
+  "restingBody": "Try another game for now!",
+  "oops": "Oops!",
+  "startFailedBody": "Something went wrong. No gems were used. Please try again.",
+  "playAgainTitle": "Play again?",
+  "playAgainBody": "Free plays are used up for today.\nThis round uses 1 gem.",
+  "youHave": "You have ",
+  "@youHave": {
+    "description": "Followed by a gem icon and the balance."
+  },
+  "notNow": "Not now",
+  "useOneGem": "Use 1 ",
+  "@useOneGem": {
+    "description": "Followed by a gem icon."
+  },
+  "backToGames": "Back to games",
+  "ok": "OK",
+  "freePlaysToday": "Free plays today",
+  "freePlaysRemaining": "{remaining} of {total} left",
+  "@freePlaysRemaining": {
+    "placeholders": {
+      "remaining": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "nextRoundUsesGem": "Next round uses 1 gem",
+  "comeBackTomorrow": "Come back tomorrow for more free plays!",
+  "gameRestingNow": "This game is resting right now",
+  "start": "Start",
+  "startWithGem": "Start  1",
+  "@startWithGem": {
+    "description": "Followed by a gem icon."
+  },
+  "pause": "Pause",
+  "paused": "Paused",
+  "keepPlaying": "Keep playing",
+  "soundOn": "Sound on",
+  "soundOff": "Sound off",
+  "games": "Games",
+  "progressSaved": "Your stars and gems are saved.",
+  "cheerAmazing": "Amazing!",
+  "cheerGreat": "Great job!",
+  "cheerNice": "Nice playing!",
+  "scoreToEarnGem": "Score {points} to earn a gem!",
+  "@scoreToEarnGem": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "youEarnedGems": "{count, plural, =1{You earned 1 gem!} other{You earned {count} gems!}}",
+  "@youEarnedGems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "myGems": "My gems",
+  "again": "Again",
+  "freePlaysDone": "Free plays are done for today.",
+  "creditBy": "by",
+  "@creditBy": {
+    "description": "Above the studio name on the splash screen."
+  },
+  "settingsSoundSection": "Sound & touch",
+  "settingsSoundEffects": "Sound effects",
+  "settingsMusic": "Music",
+  "settingsVibration": "Vibration",
+  "settingsLookSection": "Look",
+  "settingsTheme": "Theme",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "themeSystem": "Auto",
+  "@themeSystem": {
+    "description": "Follow the device light/dark setting."
+  },
+  "settingsGentleMotion": "Gentle motion",
+  "settingsGentleMotionHint": "fewer bouncy animations",
+  "settingsLanguage": "Language",
+  "settingsPlaySection": "Play",
+  "settingsLittleKid": "Little-kid mode",
+  "settingsLittleKidHint": "slower, bigger, longer rounds",
+  "settingsHowToPlay": "How to play",
+  "settingsHowToPlayHint": "a quick picture guide",
+  "done": "Done",
+  "htpPickTitle": "Pick a game",
+  "htpPickBody": "Tap a game card, then press Start.",
+  "htpTapTitle": "Tap games",
+  "htpTapBody": "Touch the things that move, as quickly as you can!",
+  "htpDragTitle": "Drag games",
+  "htpDragBody": "Hold a thing, slide your finger, and let go in the right place.",
+  "htpStarsTitle": "Stars make gems",
+  "htpStarsBody": "Every good move gives you stars. Every {points} stars turn into 1 gem!",
+  "@htpStarsBody": {
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "htpFreeTitle": "Free plays",
+  "htpFreeBody": "Every game has {count} free plays each day. After that, a round uses 1 gem.",
+  "@htpFreeBody": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "htpFavTitle": "Keep favorites",
+  "htpFavBody": "Tap the heart on a game to find it fast in Favorites.",
+  "htpNext": "Next",
+  "htpLetsPlay": "Let's play!",
+  "htpStep": "Step {current} of {total}",
+  "@htpStep": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "close": "Close",
+  "gameNotInHere": "Not in here!",
+  "gameWrongShape": "Wrong shape!",
+  "gameTryAgain": "Try again!",
+  "gameNotHere": "Not here!",
+  "gameNotThisOne": "Not this one!",
+  "gameSoClose": "So close!",
+  "gamePerfect": "Perfect!",
+  "gameOtherBucket": "Other bucket!",
+  "gameShoot": "Shoot!",
+  "gameTidyUp": "Tidy up!",
+  "gameToys": "Toys",
+  "gameBooks": "Books",
+  "gameClothes": "Clothes",
+  "gameOnlyLabel": "{bin, select, toys{Toys only!} books{Books only!} other{Clothes only!}}",
+  "@gameOnlyLabel": {
+    "placeholders": {
+      "bin": {
+        "type": "String"
+      }
+    }
+  },
+  "gameToyBox": "TOYS",
+  "@gameToyBox": {
+    "description": "Written on the toy box."
+  },
+  "gameApples": "Apples",
+  "gameBananas": "Bananas",
+  "gameOranges": "Oranges",
+  "gameCrateFor": "{fruit, select, apples{That crate is for apples!} bananas{That crate is for bananas!} other{That crate is for oranges!}}",
+  "@gameCrateFor": {
+    "placeholders": {
+      "fruit": {
+        "type": "String"
+      }
+    }
+  },
+  "gameOrder": "Order",
+  "gameFind": "Find",
+  "gameMatchShapes": "Match the shapes!",
+  "gameMatchSocks": "Match the socks!",
+  "gameFindTwin": "Find its twin!",
+  "gameWatchBall": "Watch the ball!",
+  "gameKeepWatching": "Keep watching...",
+  "gameWhereBall": "Where is the ball?",
+  "gameFoundIt": "You found it!",
+  "gameItWasHere": "It was here!",
+  "gameGreatPattern": "Great pattern!",
+  "gameWhatNext": "What comes next?",
+  "progClean": "{percent}% clean",
+  "@progClean": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "progBalloons": "{count, plural, =1{1 balloon} other{{count} balloons}}",
+  "@progBalloons": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progBalls": "{count, plural, =1{1 ball} other{{count} balls}}",
+  "@progBalls": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progTreasures": "{count, plural, =1{1 treasure} other{{count} treasures}}",
+  "@progTreasures": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progBaskets": "{count, plural, =1{1 basket} other{{count} baskets}}",
+  "@progBaskets": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progBlooms": "{count, plural, =1{1 bloom} other{{count} blooms}}",
+  "@progBlooms": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progButterflies": "{count, plural, =1{1 butterfly} other{{count} butterflies}}",
+  "@progButterflies": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progFireflies": "{count, plural, =1{1 firefly} other{{count} fireflies}}",
+  "@progFireflies": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progFound": "{count} found",
+  "@progFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progMeals": "{count, plural, =1{1 meal} other{{count} meals}}",
+  "@progMeals": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progChicks": "{count, plural, =1{1 chick} other{{count} chicks}}",
+  "@progChicks": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progFlowers": "{count, plural, =1{1 flower} other{{count} flowers}}",
+  "@progFlowers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progOrders": "{count, plural, =1{1 order} other{{count} orders}}",
+  "@progOrders": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progScoops": "{count, plural, =1{1 scoop} other{{count} scoops}}",
+  "@progScoops": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progGemsFound": "{count, plural, =1{1 gem found} other{{count} gems found}}",
+  "@progGemsFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progPatterns": "{count, plural, =1{1 pattern} other{{count} patterns}}",
+  "@progPatterns": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progSaved": "{count} saved",
+  "@progSaved": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progLadybugs": "{count, plural, =1{1 ladybug} other{{count} ladybugs}}",
+  "@progLadybugs": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progCrossed": "{count} crossed",
+  "@progCrossed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progPearls": "{count, plural, =1{1 pearl} other{{count} pearls}}",
+  "@progPearls": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progYummyFish": "{count} yummy fish",
+  "@progYummyFish": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progFish": "{count} fish",
+  "@progFish": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progShooed": "{count} shooed",
+  "@progShooed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progDrops": "{count, plural, =1{1 drop} other{{count} drops}}",
+  "@progDrops": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progLanded": "{count} landed",
+  "@progLanded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progShapes": "{count, plural, =1{1 shape} other{{count} shapes}}",
+  "@progShapes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progPairs": "{count, plural, =1{1 pair} other{{count} pairs}}",
+  "@progPairs": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progTidied": "{count} tidied",
+  "@progTidied": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progTurtles": "{count, plural, =1{1 safe turtle} other{{count} safe turtles}}",
+  "@progTurtles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progStars": "{count, plural, =1{1 star} other{{count} stars}}",
+  "@progStars": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progWakeUps": "{count, plural, =1{1 wake-up} other{{count} wake-ups}}",
+  "@progWakeUps": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progWatered": "{count} watered",
+  "@progWatered": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gamePondFishName": "Pond Fish Catch",
+  "gamePondFishGoal": "Tap the fish to catch them!",
+  "gamePondFishHowTo": "Tap a swimming fish to pop it into the basket.",
+  "gameFlowerBasketName": "Blooming Flower Basket",
+  "gameFlowerBasketGoal": "Pick flowers when they bloom!",
+  "gameFlowerBasketHowTo": "Wait for a bud to open, then tap the flower.",
+  "gameStarCollectorName": "Star Collector",
+  "gameStarCollectorGoal": "Collect twinkling stars!",
+  "gameStarCollectorHowTo": "Tap the stars. Big golden stars are extra special!",
+  "gamePenguinFeastName": "Penguin Fish Feast",
+  "gamePenguinFeastGoal": "Feed the hungry baby penguin!",
+  "gamePenguinFeastHowTo": "Tap a jumping fish to send it to the penguin.",
+  "gameFireflyName": "Firefly Catcher",
+  "gameFireflyGoal": "Light up the night garden!",
+  "gameFireflyHowTo": "Tap the glowing fireflies before they fly away.",
+  "gameBeachTreasuresName": "Sandy Beach Treasures",
+  "gameBeachTreasuresGoal": "Find shells and starfish!",
+  "gameBeachTreasuresHowTo": "Tap the treasures on the sand. Golden shells are extra special!",
+  "gameRaindropName": "Rainbow Raindrop Catch",
+  "gameRaindropGoal": "Fill the jar for a thirsty friend!",
+  "gameRaindropHowTo": "Tap the falling raindrops to fill up the jar.",
+  "gameRocketLaunchName": "Rocket Launch",
+  "gameRocketLaunchGoal": "Land rockets on the planet!",
+  "gameRocketLaunchHowTo": "When the arrow points at the planet, tap to launch!",
+  "gameBalloonParadeName": "Balloon Tap Parade",
+  "gameBalloonParadeGoal": "Pop the floating balloons!",
+  "gameBalloonParadeHowTo": "Tap the balloons before they float away.",
+  "gameBusyBeeName": "Busy Bee Garden",
+  "gameBusyBeeGoal": "Help the bees bloom flowers!",
+  "gameBusyBeeHowTo": "Tap a bee when it visits a bud to make the flower bloom.",
+  "gameHatchChickName": "Hatch-a-Chick",
+  "gameHatchChickGoal": "Help the baby chicks hatch!",
+  "gameHatchChickHowTo": "Tap the wobbly egg a few times to help the chick come out.",
+  "gameLadybugName": "Ladybug Leaf Tap",
+  "gameLadybugGoal": "Help ladybugs fly off the leaves!",
+  "gameLadybugHowTo": "Tap a crawling ladybug to help it fly. Golden ones are extra special!",
+  "gameBasketballName": "Basketball Hoop Challenge",
+  "gameBasketballGoal": "Shoot hoops with the arrow!",
+  "gameBasketballHowTo": "When the arrow points at a hoop, tap Shoot!",
+  "gameGemMineName": "Find the Gem",
+  "gameGemMineGoal": "Smash boxes to find the gem!",
+  "gameGemMineHowTo": "Tap boxes with the hammer. The box that matches the sign holds the gem!",
+  "gameCupShuffleName": "Cup Shuffle",
+  "gameCupShuffleGoal": "Find the ball under the cup!",
+  "gameCupShuffleHowTo": "Watch the ball, follow its cup, then tap where it is hiding.",
+  "gamePatternEggsName": "Pattern Egg Hunt",
+  "gamePatternEggsGoal": "Find the egg that comes next!",
+  "gamePatternEggsHowTo": "Look at the egg pattern, then tap the egg that comes next.",
+  "gameCleanRoomName": "Clean My Room",
+  "gameCleanRoomGoal": "Put toys, books and clothes away!",
+  "gameCleanRoomHowTo": "Tap a messy thing to tidy it, or switch to Drag and move it home.",
+  "gameButterflyName": "Butterfly Catch",
+  "gameButterflyGoal": "Guide butterflies to their garden!",
+  "gameButterflyHowTo": "Tap a fluttering butterfly to send it to the garden.",
+  "gameWakeOwlsName": "Wake Up, Little Owls",
+  "gameWakeOwlsGoal": "Wake the sleepy owls!",
+  "gameWakeOwlsHowTo": "Tap a sleeping owl to wake it up and watch it fly.",
+  "gameTurtleRescueName": "Tiny Turtle Rescue",
+  "gameTurtleRescueGoal": "Help baby turtles reach the reef!",
+  "gameTurtleRescueHowTo": "Tap a baby turtle and it will swim home to the coral reef.",
+  "gamePearlDiverName": "Pearl Diver",
+  "gamePearlDiverGoal": "Collect pearls from the shells!",
+  "gamePearlDiverHowTo": "When a shell opens and shows its pearl, tap it!",
+  "gameIceCreamName": "Ice Cream Catch",
+  "gameIceCreamGoal": "Catch the falling scoops!",
+  "gameIceCreamHowTo": "Drag the cone left and right to catch each scoop.",
+  "gameJellyfishName": "Jellyfish Glow",
+  "gameJellyfishGoal": "Save the baby diver from the jellyfish!",
+  "gameJellyfishHowTo": "Drag each glowing jellyfish off the screen to light up the sea.",
+  "gameBouncyBallsName": "Bouncy Ball Catch",
+  "gameBouncyBallsGoal": "Drag each ball to its bucket!",
+  "gameBouncyBallsHowTo": "Grab a bouncing ball and drop it in the bucket of the same colour.",
+  "gameFruitMarketName": "Fruit Market",
+  "gameFruitMarketGoal": "Sort fruit into the right crates!",
+  "gameFruitMarketHowTo": "Drag each fruit into its crate to fill the order.",
+  "gameTidyUpName": "Tidy-Up Time",
+  "gameTidyUpGoal": "Put toys, books and clothes away!",
+  "gameTidyUpHowTo": "Drag each thing to the place with its label.",
+  "gameShapeBoxName": "Shape Box Puzzle",
+  "gameShapeBoxGoal": "Fit each shape in its hole!",
+  "gameShapeBoxHowTo": "Drag circles, squares and triangles into the matching holes.",
+  "gameSockPairsName": "Sock Pair Match",
+  "gameSockPairsGoal": "Find each sock its twin!",
+  "gameSockPairsHowTo": "Drag each sock into the drawer with the matching sock.",
+  "gameWaterPlantsName": "Water the Plants",
+  "gameWaterPlantsGoal": "Water thirsty plants to make them bloom!",
+  "gameWaterPlantsHowTo": "Drag the watering can over a thirsty plant and hold it there.",
+  "gameFeedPenguinName": "Feed the Penguin",
+  "gameFeedPenguinGoal": "Give the penguin all the fish it wants!",
+  "gameFeedPenguinHowTo": "Drag fish from the bucket to the hungry penguin.",
+  "gamePondPathName": "Build a Pond Path",
+  "gamePondPathGoal": "Build stepping stones for the frog!",
+  "gamePondPathHowTo": "Drag each stone into the gap with the same shape.",
+  "gameSleepingMonsterName": "Don't Wake the Monster",
+  "gameSleepingMonsterGoal": "Shoo the babies before they wake daddy!",
+  "gameSleepingMonsterHowTo": "Drag or swipe the baby monsters off the screen before they poke the sleepy monster."
+}
