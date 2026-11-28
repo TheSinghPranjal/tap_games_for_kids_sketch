@@ -52,9 +52,22 @@ double bump(double t) => t <= 0 || t >= 1 ? 0 : math.sin(t * math.pi);
 class Thumb {
   Thumb._();
 
-  static void paper(Canvas c, Size s, {Color? tint}) {
-    Paper.graph(c, Offset.zero & s, cell: 14, speckles: false);
-    if (tint != null) c.drawRect(Offset.zero & s, Paint()..color = tint);
+  /// Crayon-washed backdrop so every card reads as a full scene: a soft
+  /// [wash] (sky by default; pass a warm colour for indoor games) fading
+  /// down the card, light pencil hatching and the notebook grid on top.
+  static void paper(Canvas c, Size s, {Color wash = Ink.sky}) {
+    final r = Offset.zero & s;
+    c.drawRect(
+      r,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Ink.tint(wash, 0.55), Ink.tint(wash, 0.2)],
+        ).createShader(r),
+    );
+    Pen.hatchIn(c, Path()..addRect(r), Ink.tint(wash, 0.7), gap: 6, width: 1, alpha: 0.35);
+    Paper.gridOverlay(c, r, cell: 14, alpha: 0.35);
   }
 
   static void scene(Canvas c, Size s, Color color, {double alpha = 1}) {

@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart' hide Ink;
 
 import '../app_scope.dart';
+import '../art/nature.dart';
 import '../art/objects.dart';
 import '../core/engine/game_definition.dart';
 import '../core/rewards/reward_service.dart';
@@ -53,57 +54,64 @@ class _HubScreenState extends State<HubScreen> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final scope = AppScope.of(context);
     return NotebookPage(
-      child: SafeArea(
-        child: ListenableBuilder(
-          listenable: Listenable.merge([scope.rewards, scope.settings, scope.registry]),
-          builder: (context, _) {
-            final games = scope.registry.all.where((g) {
-              return switch (_filter) {
-                HubFilter.all => true,
-                HubFilter.tap => g.interactionType.isTap,
-                HubFilter.drag => g.interactionType.isDrag,
-                HubFilter.favorites => scope.settings.favorites.contains(g.gameId),
-              };
-            }).toList();
-            return CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(child: _header(scope)),
-                SliverToBoxAdapter(child: _filters()),
-                SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(14, 4, 14, 28),
-                  sliver: SliverLayoutBuilder(
-                    builder: (context, c) {
-                      final cols = c.crossAxisExtent > 640 ? 3 : 2;
-                      final items = games.isEmpty ? 1 : games.length + (_filter == HubFilter.drag ? 1 : 0);
-                      // The card thumbnail is 3:2 and grows with the column, so the row
-                      // height must grow with it (fixed text + button block below it).
-                      const spacing = 12.0;
-                      final colWidth = (c.crossAxisExtent - spacing * (cols - 1)) / cols;
-                      final thumbHeight = ((colWidth - 18) / 1.5).roundToDouble();
-                      return SliverGrid(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: cols,
-                          mainAxisSpacing: 14,
-                          crossAxisSpacing: spacing,
-                          mainAxisExtent: thumbHeight + 232,
-                        ),
-                        delegate: SliverChildBuilderDelegate(
-                          (context, i) => _CardEntrance(
-                            // Re-runs the pop-in when the filter changes.
-                            key: ValueKey('${_filter.name}-$i'),
-                            index: i,
-                            child: i < games.length ? _GameCard(def: games[i]) : _ComingSoonCard(filter: _filter),
-                          ),
-                          childCount: items,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
+      child: Stack(
+        children: [
+          SafeArea(
+            bottom: false,
+            child: ListenableBuilder(
+              listenable: Listenable.merge([scope.rewards, scope.settings, scope.registry]),
+              builder: (context, _) {
+                final games = scope.registry.all.where((g) {
+                  return switch (_filter) {
+                    HubFilter.all => true,
+                    HubFilter.tap => g.interactionType.isTap,
+                    HubFilter.drag => g.interactionType.isDrag,
+                    HubFilter.favorites => scope.settings.favorites.contains(g.gameId),
+                  };
+                }).toList();
+                return CustomScrollView(
+                  slivers: [
+                    SliverToBoxAdapter(child: _header(scope)),
+                    SliverToBoxAdapter(child: _filters()),
+                    SliverPadding(
+                      // Room at the end so the last row can scroll clear of the meadow.
+                      padding: EdgeInsets.fromLTRB(14, 4, 14, _Meadow.height + MediaQuery.paddingOf(context).bottom),
+                      sliver: SliverLayoutBuilder(
+                        builder: (context, c) {
+                          final cols = c.crossAxisExtent > 640 ? 3 : 2;
+                          final items = games.isEmpty ? 1 : games.length + (_filter == HubFilter.drag ? 1 : 0);
+                          // The card thumbnail is 3:2 and grows with the column, so the row
+                          // height must grow with it, plus the text block measured below it.
+                          const spacing = 12.0;
+                          final colWidth = (c.crossAxisExtent - spacing * (cols - 1)) / cols;
+                          final thumbHeight = ((colWidth - 18) / 1.5).roundToDouble();
+                          return SliverGrid(
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: cols,
+                              mainAxisSpacing: 14,
+                              crossAxisSpacing: spacing,
+                              mainAxisExtent: thumbHeight + _GameCard.bodyHeight(context),
+                            ),
+                            delegate: SliverChildBuilderDelegate(
+                              (context, i) => _CardEntrance(
+                                // Re-runs the pop-in when the filter changes.
+                                key: ValueKey('${_filter.name}-$i'),
+                                index: i,
+                                child: i < games.length ? _GameCard(def: games[i]) : _ComingSoonCard(filter: _filter),
+                              ),
+                              childCount: items,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+          const Positioned(left: 0, right: 0, bottom: 0, child: IgnorePointer(child: _Meadow())),
+        ],
       ),
     );
   }
@@ -167,11 +175,21 @@ class _HubScreenState extends State<HubScreen> with WidgetsBindingObserver {
                         textAlign: TextAlign.left,
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 8),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Flexible(child: Text(l.hubSubtitle, style: Txt.note.copyWith(fontSize: 18).soft(context))),
+                        // A lavender crayon scribble behind the tagline.
+                        Flexible(
+                          child: SketchBox(
+                            fill: context.palette.tint(Ink.purple, 0.22),
+                            hatch: Ink.purple.withValues(alpha: 0.35),
+                            radius: 18,
+                            seed: 9,
+                            padding: const EdgeInsets.fromLTRB(14, 4, 14, 6),
+                            child: Text(l.hubSubtitle, style: Txt.note.copyWith(fontSize: 17).soft(context)),
+                          ),
+                        ),
                         const SizedBox(width: 8),
                         SpriteView(
                           size: const Size(40, 30),
@@ -267,6 +285,43 @@ class _HubScreenState extends State<HubScreen> with WidgetsBindingObserver {
 class _GameCard extends StatelessWidget {
   const _GameCard({required this.def});
   final GameDefinition def;
+
+  /// A yellow highlighter swipe under each line of the name.
+  static final _nameStyle = Txt.body.copyWith(
+    fontSize: 17,
+    fontWeight: FontWeight.w900,
+    height: 1.15,
+    decoration: TextDecoration.underline,
+    decorationColor: Ink.yellow.withValues(alpha: 0.7),
+    decorationThickness: 4,
+  );
+  static final _goalStyle = Txt.small.copyWith(fontSize: 14);
+  static final _playStyle = Txt.heading.copyWith(fontSize: 22);
+
+  /// Height of everything below the thumbnail: the tallest name and goal (two
+  /// lines each), the tag row and the Play button, measured in the current
+  /// font, language and text size so the card has no dead space.
+  static double bodyHeight(BuildContext context) {
+    final base = DefaultTextStyle.of(context).style;
+    final scaler = MediaQuery.textScalerOf(context);
+    double lines(TextStyle style, int n) {
+      final tp = TextPainter(
+        text: TextSpan(text: List.filled(n, 'Ág').join('\n'), style: base.merge(style)),
+        textDirection: TextDirection.ltr,
+        textScaler: scaler,
+      )..layout();
+      final h = tp.height;
+      tp.dispose();
+      return h;
+    }
+
+    final tagRow = max(lines(_Tag.style, 1) + 10, 22.0);
+    return lines(_nameStyle, 2) +
+        lines(_goalStyle, 2) +
+        tagRow +
+        lines(_playStyle, 1) +
+        62; // padding, gaps and borders
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -370,19 +425,9 @@ class _GameCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 8),
-              Text(
-                def.name(l),
-                style: Txt.body.copyWith(fontSize: 17, fontWeight: FontWeight.w900, height: 1.15),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
+              Text(def.name(l), style: _nameStyle, maxLines: 2, overflow: TextOverflow.ellipsis),
               const SizedBox(height: 3),
-              Text(
-                def.objective(l),
-                style: Txt.small.copyWith(fontSize: 14).soft(context),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
+              Text(def.objective(l), style: _goalStyle.soft(context), maxLines: 2, overflow: TextOverflow.ellipsis),
               const Spacer(),
               Row(
                 children: [
@@ -430,7 +475,7 @@ class _GameCard extends StatelessWidget {
                     children: [
                       DoodleIcon(enabled ? Doodle.play : Doodle.lock, size: 22),
                       const SizedBox(width: 8),
-                      Flexible(child: Text(enabled ? l.play : l.resting, style: Txt.heading.copyWith(fontSize: 22))),
+                      Flexible(child: Text(enabled ? l.play : l.resting, style: _playStyle)),
                     ],
                   ),
                 ),
@@ -448,13 +493,15 @@ class _Tag extends StatelessWidget {
   final String text;
   final Color color;
 
+  static final style = Txt.small.copyWith(fontSize: 12, fontWeight: FontWeight.w900, letterSpacing: 0.5);
+
   @override
   Widget build(BuildContext context) => SketchBox(
     fill: context.palette.tint(color, 0.4),
     radius: 12,
     seed: 6,
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-    child: Text(text, style: Txt.small.copyWith(fontSize: 12, fontWeight: FontWeight.w900, letterSpacing: 0.5)),
+    child: Text(text, style: style),
   );
 }
 
@@ -538,4 +585,65 @@ class _CardEntranceState extends State<_CardEntrance> with SingleTickerProviderS
       child: widget.child,
     ),
   );
+}
+
+/// Grassy hills with bushes and flowers along the bottom of the hub.
+class _Meadow extends StatelessWidget {
+  const _Meadow();
+
+  static const height = 64.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final bottom = MediaQuery.paddingOf(context).bottom;
+    return SceneDimmer(
+      child: LayoutBuilder(
+        builder: (context, box) => SpriteView(
+          size: Size(box.maxWidth, height + bottom),
+          painter: (c, s) => SpriteCache.draw(c, 'hub-meadow-${s.width.round()}x${s.height.round()}', (c) {
+            final rng = Random(4);
+            // Bushes peek over the hill line.
+            for (var x = 10.0; x < s.width + 40; x += 70 + rng.nextDouble() * 50) {
+              c.save();
+              c.translate(x, 30 + rng.nextDouble() * 8);
+              Nature.bush(c, 70 + rng.nextDouble() * 30, seed: x.round());
+              c.restore();
+            }
+            // Rolling hill.
+            final hill = Path()..moveTo(-10, 34);
+            for (var x = -10.0; x < s.width + 10; x += 60) {
+              hill.quadraticBezierTo(x + 30, (x / 60).round().isEven ? 20 : 30, x + 60, 32);
+            }
+            hill
+              ..lineTo(s.width + 10, s.height + 10)
+              ..lineTo(-10, s.height + 10)
+              ..close();
+            Pen.shape(
+              c,
+              hill,
+              fill: Ink.tint(Ink.mint, 0.6),
+              solid: true,
+              hatch: Ink.leaf.withValues(alpha: 0.5),
+              seed: 6,
+            );
+            for (var x = 20.0; x < s.width; x += 46 + rng.nextDouble() * 30) {
+              c.save();
+              c.translate(x, 40 + rng.nextDouble() * 14);
+              Nature.grass(c, 18, seed: x.round());
+              c.restore();
+            }
+            // A few little flowers.
+            const colors = [Ink.pink, Ink.yellow, Ink.coral, Ink.purple];
+            var i = 0;
+            for (var x = s.width * 0.18; x < s.width; x += s.width * 0.27, i++) {
+              c.save();
+              c.translate(x + rng.nextDouble() * 20, 44 + rng.nextDouble() * 10);
+              Nature.flower(c, colors[i % colors.length], r: 11, face: false, seed: i + 2);
+              c.restore();
+            }
+          }),
+        ),
+      ),
+    );
+  }
 }

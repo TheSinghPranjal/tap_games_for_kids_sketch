@@ -418,7 +418,7 @@ final cleanRoomGame = GameDefinition(
   ],
   create: CleanRoomScene.new,
   thumbnail: (c, s) {
-    Thumb.paper(c, s);
+    Thumb.paper(c, s, wash: Ink.sand);
     Thumb.put(
       c,
       s,

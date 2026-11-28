@@ -61,7 +61,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         child: LayoutBuilder(
           builder: (context, c) {
             final w = c.maxWidth, h = c.maxHeight;
+            // Expand: the Scaffold body is only loosely constrained, so without it
+            // the Stack shrinks to the sign column and the scene stops short.
             return Stack(
+              fit: StackFit.expand,
               children: [
                 Positioned.fill(
                   child: DuskFilter(

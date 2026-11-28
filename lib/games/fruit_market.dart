@@ -173,7 +173,7 @@ final fruitMarketGame = GameDefinition(
   assetManifest: const ['apple', 'banana', 'orange', 'crate', 'awning'],
   create: FruitMarketScene.new,
   thumbnail: (c, s) {
-    Thumb.paper(c, s);
+    Thumb.paper(c, s, wash: Ink.sand);
     Thumb.put(
       c,
       s,

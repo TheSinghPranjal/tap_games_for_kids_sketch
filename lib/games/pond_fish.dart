@@ -398,9 +398,19 @@ final pondFishGame = GameDefinition(
   assetManifest: const ['fish', 'basket', 'lily-pad', 'reed', 'rock'],
   create: PondFishScene.new,
   thumbnail: (c, s) {
-    Thumb.paper(c, s);
-    Thumb.put(c, s, 0.5, 0.55, (c) => waterBody(c, Pen.oval(Offset.zero, 70, 42), color: _water, seed: 3));
-    Thumb.put(c, s, 0.22, 0.3, (c) => Nature.lilyPad(c, 16, flower: true));
+    // The pond fills the whole card, like the game itself.
+    waterBody(c, Path()..addRect((Offset.zero & s).inflate(4)), color: _water, seed: 3);
+    Thumb.put(c, s, 0.08, 1.0, (c) => Nature.grass(c, 40, seed: 2));
+    Thumb.put(c, s, 0.22, 0.26, (c) => Nature.lilyPad(c, 18, flower: true));
+    for (final (fx, fy, r) in [(0.58, 0.2, 4.5), (0.64, 0.1, 3.0), (0.53, 0.32, 2.5)]) {
+      Thumb.put(
+        c,
+        s,
+        fx,
+        fy,
+        (c) => Pen.shape(c, Pen.circle(Offset.zero, r), fill: Ink.white, solid: true, width: 1.4),
+      );
+    }
     _fishThumb(c, s, 0.42, 0.5, 0);
     _fishThumb(c, s, 0.66, 0.68, 2);
     Thumb.put(c, s, 0.86, 0.8, (c) => Props.basket(c, w: 40, h: 26));

@@ -131,7 +131,7 @@ final shapeBoxGame = GameDefinition(
   assetManifest: const ['shape-sorter', 'shapes'],
   create: ShapeBoxScene.new,
   thumbnail: (c, s) {
-    Thumb.paper(c, s);
+    Thumb.paper(c, s, wash: Ink.sand);
     Thumb.put(
       c,
       s,

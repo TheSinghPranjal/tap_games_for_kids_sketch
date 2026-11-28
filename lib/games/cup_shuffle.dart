@@ -266,7 +266,7 @@ final cupShuffleGame = GameDefinition(
   assetManifest: const ['cup', 'ball', 'table'],
   create: CupShuffleScene.new,
   thumbnail: (c, s) {
-    Thumb.paper(c, s);
+    Thumb.paper(c, s, wash: Ink.sand);
     Thumb.put(
       c,
       s,

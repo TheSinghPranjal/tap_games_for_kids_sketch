@@ -386,15 +386,20 @@ class _DoodlePainter extends CustomPainter {
             width: 2,
           );
         case Doodle.gear:
-          Pen.shape(
-            c,
-            Pen.star(const Offset(12, 12), 10, 7.5, points: 8),
-            fill: color,
-            solid: true,
-            ink: color,
-            width: 1.6,
-          );
-          Pen.dot(c, const Offset(12, 12), 3.5, Ink.cream);
+          // A wheel with eight square teeth, so it still reads as a gear when small.
+          var gear = Pen.circle(Offset.zero, 7.2);
+          for (var i = 0; i < 8; i++) {
+            final tooth = Path()
+              ..addRRect(
+                RRect.fromRectAndRadius(
+                  Rect.fromCenter(center: const Offset(0, -8.6), width: 4.2, height: 4.6),
+                  const Radius.circular(1.2),
+                ),
+              );
+            gear = Path.combine(PathOperation.union, gear, tooth.transform(Matrix4.rotationZ(i * math.pi / 4).storage));
+          }
+          Pen.shape(c, gear.shift(const Offset(12, 12)), fill: color, solid: true, ink: color, width: 1.4, amp: 0.3);
+          Pen.dot(c, const Offset(12, 12), 3.2, Ink.cream);
         case Doodle.heart:
           Pen.stroke(c, Pen.heartPath(const Offset(12, 12), 8), ink: color, width: w);
         case Doodle.heartFilled:
@@ -596,7 +601,7 @@ class _DotsPainter extends CustomPainter {
         Pen.shape(
           c,
           Pen.circle(Offset.zero, dot / 2),
-          fill: filled ? Ink.coral : empty,
+          fill: filled ? Ink.gold : empty,
           ink: ink,
           solid: true,
           width: 2,
@@ -756,7 +761,14 @@ class NotebookPage extends StatelessWidget {
 
 /// Bubbly multi-colour text with a thick navy outline, for big titles.
 class OutlinedText extends StatelessWidget {
-  const OutlinedText(this.parts, {super.key, required this.style, this.stroke = 7, this.textAlign = TextAlign.center});
+  const OutlinedText(
+    this.parts, {
+    super.key,
+    required this.style,
+    this.stroke = 7,
+    this.textAlign = TextAlign.center,
+    this.rim,
+  });
 
   /// Text runs and their fill colours.
   final List<(String, Color)> parts;
@@ -764,41 +776,43 @@ class OutlinedText extends StatelessWidget {
   final double stroke;
   final TextAlign textAlign;
 
+  /// Optional inner rim (e.g. white) between the navy outline and the fill.
+  final Color? rim;
+
+  /// Crisp copies of the glyphs at [r] around them, which together draw a
+  /// solid band of [color] around each letter.
+  static List<Shadow> _ring(Color color, double r, int n, [Offset shift = Offset.zero]) => [
+    for (var i = 0; i < n; i++)
+      Shadow(color: color, offset: shift + Offset(math.cos(i * 2 * math.pi / n), math.sin(i * 2 * math.pi / n)) * r),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final outline = style.copyWith(
-      foreground: Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = stroke
-        ..strokeJoin = StrokeJoin.round
-        ..color = Ink.navy,
-    );
-    return Stack(
-      children: [
-        Text.rich(
-          TextSpan(
-            style: outline,
-            children: [for (final (t, _) in parts) TextSpan(text: t)],
-          ),
-          textAlign: textAlign,
-        ),
-        Text.rich(
-          TextSpan(
-            style: style,
-            children: [
-              for (final (t, col) in parts)
-                TextSpan(
-                  text: t,
-                  style: TextStyle(
-                    color: col,
-                    shadows: [Shadow(color: Ink.shade(col, 0.2), offset: const Offset(0, 3))],
-                  ),
-                ),
-            ],
-          ),
-          textAlign: textAlign,
-        ),
-      ],
+    // The outline and rim are rings of shadows behind the filled letters, not
+    // stroked text: Impeller (iOS) draws stroked glyphs as filled ones, which
+    // hid the outline completely on devices.
+    final half = stroke / 2;
+    List<Shadow> shadows(Color col) => [
+      if (rim != null) ..._ring(Ink.navy, half, 24, const Offset(0, 3)),
+      ..._ring(Ink.navy, half, 24),
+      ..._ring(Ink.navy, half * 0.6, 16),
+      if (rim != null)
+        ..._ring(rim!, stroke * 0.2, 16)
+      else
+        Shadow(color: Ink.shade(col, 0.2), offset: const Offset(0, 3)),
+    ];
+    return Text.rich(
+      TextSpan(
+        style: style,
+        children: [
+          for (final (t, col) in parts)
+            TextSpan(
+              text: t,
+              style: TextStyle(color: col, shadows: shadows(col)),
+            ),
+        ],
+      ),
+      textAlign: textAlign,
     );
   }
 }

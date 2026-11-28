@@ -166,7 +166,7 @@ final tidyUpGame = GameDefinition(
   assetManifest: const ['teddy', 'book', 'shirt', 'toy-chest', 'bookcase', 'wardrobe'],
   create: TidyUpScene.new,
   thumbnail: (c, s) {
-    Thumb.paper(c, s);
+    Thumb.paper(c, s, wash: Ink.sand);
     Thumb.put(
       c,
       s,
